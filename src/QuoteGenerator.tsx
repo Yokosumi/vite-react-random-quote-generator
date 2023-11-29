@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 const quotesURL = 'https://api.quotable.io/random'
 
 type QuoteTypes = {
-    _id: number
     content: string
     author: string
 }
@@ -15,9 +14,15 @@ export const QuoteGenerator = () => {
     )
 
     async function updateQuote() {
-        const response = await axios.get(quotesURL)
-        const quotes = await response.data
-        setRandomQuotes(quotes)
+        try {
+            const response = await axios.get(quotesURL)
+            const quotes = await response.data
+            if (response.status === 200) {
+                setRandomQuotes(quotes)
+            }
+        } catch (error) {
+            console.log(`Oh Oh! Something went wrong: {error}`)
+        }
     }
 
     useEffect(() => {
